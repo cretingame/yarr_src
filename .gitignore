@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+bin/
+
+# Log
+*.log
+*.jou
+
+# hidden files
+*~
