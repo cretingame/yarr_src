@@ -16,9 +16,10 @@ int main(int argc, char **argv) {
     //const size_t size = 524288;
     //const size_t size = 262144;
     //const size_t size = 131072;
-    const size_t size = 65536; // may crash
+    //const size_t size = 65536; // may crash
     //const size_t size = 32768; // ok
     //const size_t size = 16384; // ok
+    const size_t size = 4096;
     //const size_t size = 512;
     //const size_t size = 256;
     //const size_t size = 128;
