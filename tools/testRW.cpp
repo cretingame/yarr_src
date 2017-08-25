@@ -17,11 +17,14 @@ int main(int argc, char **argv) {
     std::ofstream myfile;
     myfile.open("testRead.out");   
  
-    const size_t size = 131072;
+    //const size_t size = 131072;
+    //const size_t size = 65536;
+    const size_t size = 4096;
     //const size_t size = 2048;
     //const size_t size = 8550;
     uint32_t offset = 0x0;
-    const unsigned testIterationsNb = 100000;
+    //const unsigned testIterationsNb = 65533;
+    const unsigned testIterationsNb = 200000;
     const bool errorOnly = true;
 
     unsigned err_count = 0;
@@ -37,8 +40,6 @@ int main(int argc, char **argv) {
     
 
     
-    mySpec.writeDma(offset, data, size);
-    std::cout << "... writing " << size * 4 << " byte." << std::endl;
     
     std::cout << "Starting DMA read test ..." << std::endl;
 
@@ -49,9 +50,10 @@ int main(int argc, char **argv) {
       delete resp;
       resp = new uint32_t[size];
       memset(resp, size*4, 0x5A);
+      mySpec.writeDma(offset, data, size);
       error = mySpec.readDma(offset, resp, size); 
-      std::cout << "\r" << j << ": ... read " << size * 4 << " byte.";
-      std::cout.flush();
+      //std::cout << "\r" << j << ": ... write and read " << size * 4 << " byte.";
+      //std::cout.flush();
 	    for (unsigned i=0; i<size; i++) {
 		if (data[i] != resp[i]) {
 		    err_count++;
@@ -73,8 +75,11 @@ int main(int argc, char **argv) {
 	    }
 
 
+      if (error != 0 or err_count != 0) { 
+        std::cout << "Error at iteration number:" << j << std::endl;
+        j = testIterationsNb;
+      }
       j++;
-      if (error != 0 or err_count != 0) j = testIterationsNb;
       //std::this_thread::sleep_for(std::chrono::seconds(15));
     }
     
@@ -86,6 +91,7 @@ int main(int argc, char **argv) {
         myfile << std::hex  << resp[i+1] << "\t"; 
         if ((i/2 - 1)%4 == 0) myfile << std::endl;
       }
+    std::cout << "FINISH !!" << (j - 1) << std::endl;
 
     myfile.close();
     delete resp;

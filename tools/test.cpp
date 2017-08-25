@@ -17,12 +17,15 @@ int main(int argc, char **argv) {
     //const size_t size = 262144;
     //const size_t size = 131072;
     //const size_t size = 65536; // may crash
+    //const size_t size = 65535; // may crash
     //const size_t size = 32768; // ok
     //const size_t size = 16384; // ok
-    const size_t size = 4096;
+    //const size_t size = 4096;
     //const size_t size = 512;
+    //const size_t size = 256*3;
     //const size_t size = 256;
-    //const size_t size = 128;
+    const size_t size = 128;
+    //const size_t size = 127;
     //const size_t size = 8000;
     const bool errorOnly = true;    
 
@@ -48,7 +51,7 @@ int main(int argc, char **argv) {
     mySpec.readDma(address, resp, size); 
     std::cout << "... read " << size * 4 << " byte." << std::endl;
     
-    char * respColorString;
+    std::string respColorString;
 
     for (unsigned i=0; i<size; i++) {
         if (data[i] != resp[i]) {

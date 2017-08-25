@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <cmath>
+#include <chrono>
+#include <thread>
 
 uint32_t rand32() {
     uint32_t number = 0;
@@ -21,11 +23,16 @@ uint32_t rand32() {
 int main (void) {
     SpecController mySpec(0);
     
-    int maxLoops = 50000;
+    //int maxLoops = 1000000;
+    int maxLoops = 100000;
+    //int maxLoops = 600000;
     int overall_errors = 0;
     uint32_t off = 0;
 
-    const size_t size = 64*256;// 256*100 // 1kB
+    const size_t size = 131072;// 256*100 // 1kB
+    //const size_t size = 65536;// 256*100 // 1kB
+    //const size_t size = 8000;
+    //const size_t size = 2000;// 256*100 // 1kB
     
     srand(time(NULL));
 
@@ -57,12 +64,13 @@ int main (void) {
         //std::cout << "Creating Sample of size " << size*4/1024 << "kB ... ";
         uint32_t *sample = new uint32_t[size];
         for(unsigned int i = 0; i<size; i++)
-            //sample[i] = rand32();
-            sample[i] = (i+off);
+            sample[i] = rand32();
+            //sample[i] = (i+off);
 
-        //std::cout << "Writing Sample ... ";
+        //std::cout << "Writing Sample ... " << std::endl;
         if (mySpec.writeDma(off, sample, size))
             return 0; 
+        //std::this_thread::sleep_for(std::chrono::seconds(12));
         //std::cout << "Reading Sample!" << std::endl;
         uint32_t *readBack = new uint32_t[size];
         if (mySpec.readDma(off, readBack, size))
@@ -87,8 +95,8 @@ int main (void) {
         delete readBack;
         if (counter > 0)
             return 0;
-        //sleep(1); // for chipscope
-
+        //sleep(12); // for chipscope
+        //std::this_thread::sleep_for(std::chrono::seconds(12));
     }
     
     std::cout << std::endl;
